@@ -35,6 +35,7 @@ const BRAND = {
     yellow: '#F5C518',
     dark: '#2B2B2B',
     muted: '#6B6B6B',
+    side: '#C5C5C5',
 };
 
 const qrDataUrl = ref<string | null>(null);
@@ -252,95 +253,103 @@ onUnmounted(() => {
             </p>
         </header>
 
-        <!-- Corps blanc -->
-        <section class="relative z-10 flex flex-1 flex-col items-center bg-white px-4 pb-8 pt-8 sm:px-8 sm:pt-10">
-            <template v-if="kiosk_unavailable">
-                <div class="my-auto max-w-md px-4 text-center">
-                    <p class="text-xl font-bold uppercase" :style="{ color: BRAND.red }">Borne indisponible</p>
-                    <p class="mt-3 text-sm" :style="{ color: BRAND.muted }">{{ unavailable_message }}</p>
-                </div>
-            </template>
-
-            <template v-else-if="qr_inactif_jour">
-                <div class="my-auto max-w-md px-4 text-center">
-                    <p class="text-xl font-bold uppercase" :style="{ color: BRAND.red }">Pointage fermé</p>
-                    <p class="mt-3 text-sm" :style="{ color: BRAND.muted }">{{ qr_inactif_message }}</p>
-                </div>
-            </template>
-
-            <template v-else>
-                <h1
-                    class="text-center text-3xl font-black uppercase leading-none tracking-tight sm:text-5xl"
-                    :style="{ color: BRAND.red, fontFamily: 'Arial Black, Arial, sans-serif' }"
-                >
-                    Scannez et pointez
-                </h1>
-                <p class="mt-3 text-center text-sm font-medium sm:text-base" :style="{ color: BRAND.muted }">
-                    Rapide · Sécurisé · Sans contact
-                </p>
-                <p v-if="agence" class="mt-2 text-center text-xs uppercase tracking-wide text-[#9a9a9a]">
-                    {{ agence.nom }}
-                </p>
-
-                <!-- Cadre QR + coins L -->
-                <div class="relative mx-auto mt-8 w-[min(72vw,340px)] sm:mt-10 sm:w-[min(58vw,380px)]">
-                    <span class="corner corner-tl" />
-                    <span class="corner corner-tr" />
-                    <span class="corner corner-bl" />
-                    <span class="corner corner-br" />
-
-                    <div class="relative aspect-square bg-white p-4 sm:p-5">
-                        <img
-                            v-if="qrDataUrl"
-                            :src="qrDataUrl"
-                            :alt="`QR pointage ${agence?.nom ?? ''}`"
-                            class="pointer-events-none h-full w-full object-contain"
-                            draggable="false"
-                        />
-                        <div
-                            v-else
-                            class="flex h-full w-full items-center justify-center text-sm"
-                            :style="{ color: BRAND.muted }"
-                        >
-                            Génération…
-                        </div>
-
+        <!-- Corps : bandes grises latérales + colonne blanche centrée -->
+        <section
+            class="relative z-10 flex flex-1 justify-center"
+            :style="{ background: BRAND.side }"
+        >
+            <div
+                class="flex w-full max-w-[560px] flex-1 flex-col items-center bg-white px-4 pb-8 pt-8 shadow-[0_0_40px_rgba(0,0,0,0.12)] sm:px-8 sm:pt-10"
+            >
+                <template v-if="kiosk_unavailable">
+                    <div class="my-auto max-w-md px-4 text-center">
+                        <p class="text-xl font-bold uppercase" :style="{ color: BRAND.red }">Borne indisponible</p>
+                        <p class="mt-3 text-sm" :style="{ color: BRAND.muted }">{{ unavailable_message }}</p>
                     </div>
-                </div>
+                </template>
 
-                <p
-                    class="mt-5 text-center text-base font-semibold tracking-wide sm:text-lg"
-                    :style="{ color: BRAND.dark }"
-                >
-                    {{ referenceCode }}
-                </p>
+                <template v-else-if="qr_inactif_jour">
+                    <div class="my-auto max-w-md px-4 text-center">
+                        <p class="text-xl font-bold uppercase" :style="{ color: BRAND.red }">Pointage fermé</p>
+                        <p class="mt-3 text-sm" :style="{ color: BRAND.muted }">{{ qr_inactif_message }}</p>
+                    </div>
+                </template>
 
-                <p
-                    class="mt-6 text-center text-sm font-bold uppercase tracking-[0.12em] sm:text-base"
-                    :style="{ color: BRAND.red }"
-                >
-                    Merci pour votre confiance
-                </p>
+                <template v-else>
+                    <h1
+                        class="text-center text-3xl font-black uppercase leading-none tracking-tight sm:text-5xl"
+                        :style="{ color: BRAND.red, fontFamily: 'Arial Black, Arial, sans-serif' }"
+                    >
+                        Scannez et pointez
+                    </h1>
+                    <p class="mt-3 text-center text-sm font-medium sm:text-base" :style="{ color: '#808080' }">
+                        One goal, one tech, one team
+                    </p>
+                    <p v-if="agence" class="mt-2 text-center text-xs uppercase tracking-wide text-[#9a9a9a]">
+                        {{ agence.nom }}
+                    </p>
 
-                <p v-if="error" class="mt-4 text-center text-sm font-medium" :style="{ color: BRAND.red }">
-                    {{ error }}
-                </p>
+                    <!-- Cadre QR + coins L -->
+                    <div class="relative mx-auto mt-8 w-[min(72vw,340px)] sm:mt-10 sm:w-[min(58vw,380px)]">
+                        <span class="corner corner-tl" />
+                        <span class="corner corner-tr" />
+                        <span class="corner corner-bl" />
+                        <span class="corner corner-br" />
 
-                <p v-if="currentQr" class="mt-3 text-center font-mono text-[11px] text-[#a0a0a0]">
-                    Renouvellement dans {{ secondsLeft }}s
-                    <span v-if="wakeLockActive"> · Écran allumé</span>
-                </p>
-            </template>
+                        <div class="relative aspect-square bg-white p-4 sm:p-5">
+                            <img
+                                v-if="qrDataUrl"
+                                :src="qrDataUrl"
+                                :alt="`QR pointage ${agence?.nom ?? ''}`"
+                                class="pointer-events-none h-full w-full object-contain"
+                                draggable="false"
+                            />
+                            <div
+                                v-else
+                                class="flex h-full w-full items-center justify-center text-sm"
+                                :style="{ color: BRAND.muted }"
+                            >
+                                Génération…
+                            </div>
+                        </div>
+                    </div>
+
+                    <p
+                        class="mt-5 text-center text-base font-semibold tracking-wide sm:text-lg"
+                        :style="{ color: BRAND.dark }"
+                    >
+                        {{ referenceCode }}
+                    </p>
+
+                    <p
+                        class="mt-6 text-center text-sm font-bold uppercase tracking-[0.12em] sm:text-base"
+                        :style="{ color: BRAND.red }"
+                    >
+                        Merci pour votre confiance
+                    </p>
+
+                    <p v-if="error" class="mt-4 text-center text-sm font-medium" :style="{ color: BRAND.red }">
+                        {{ error }}
+                    </p>
+
+                    <p v-if="currentQr" class="mt-3 text-center font-mono text-[11px] text-[#a0a0a0]">
+                        Renouvellement dans {{ secondsLeft }}s
+                        <span v-if="wakeLockActive"> · Écran allumé</span>
+                    </p>
+                </template>
+            </div>
         </section>
 
         <!-- Vague rouge -->
-        <div class="relative z-10 -mb-px leading-[0]" :style="{ background: 'white' }">
-            <svg viewBox="0 0 1440 56" class="block w-full" preserveAspectRatio="none" aria-hidden="true">
-                <path
-                    fill="#C8102E"
-                    d="M0,28 C180,56 360,0 540,24 C720,48 900,8 1080,28 C1260,48 1360,40 1440,24 L1440,56 L0,56 Z"
-                />
-            </svg>
+        <div class="relative z-10 -mb-px leading-[0]" :style="{ background: BRAND.side }">
+            <div class="mx-auto max-w-[560px] bg-white leading-[0]">
+                <svg viewBox="0 0 1440 56" class="block w-full" preserveAspectRatio="none" aria-hidden="true">
+                    <path
+                        fill="#C8102E"
+                        d="M0,28 C180,56 360,0 540,24 C720,48 900,8 1080,28 C1260,48 1360,40 1440,24 L1440,56 L0,56 Z"
+                    />
+                </svg>
+            </div>
         </div>
         <div class="h-2" :style="{ background: BRAND.red }" />
 
