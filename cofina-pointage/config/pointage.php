@@ -43,6 +43,17 @@ return [
     'default_geofencing_radius_metres' => (int) env('POINTAGE_DEFAULT_GEOFENCING_RADIUS', 50),
 
     /**
+     * Borne / tablette QR : si la localisation est active, enregistrer automatiquement
+     * la position GPS de la tablette comme coordonnées du site (référence géorepérage).
+     */
+    'kiosk_auto_site_gps' => env('POINTAGE_KIOSK_AUTO_SITE_GPS') !== null
+        ? filter_var(env('POINTAGE_KIOSK_AUTO_SITE_GPS'), FILTER_VALIDATE_BOOLEAN)
+        : true,
+
+    /** Précision max (m) acceptée pour synchroniser le GPS site depuis la borne. */
+    'kiosk_auto_site_gps_max_accuracy_metres' => (int) env('POINTAGE_KIOSK_AUTO_SITE_GPS_MAX_ACCURACY', 100),
+
+    /**
      * QR imprimé / affiché : encoder une URL (scan → page web + deep link app).
      * false = jeton brut (ancien comportement).
      */

@@ -35,6 +35,9 @@ Route::get('/pointage/kiosk/{token}', [PointageKioskController::class, 'show'])
 Route::get('/pointage/kiosk/{token}/qr', [PointageKioskController::class, 'refresh'])
     ->where('token', '[a-f0-9]{32,64}')
     ->name('pointage.kiosk.qr');
+Route::post('/pointage/kiosk/{token}/location', [PointageKioskController::class, 'syncLocation'])
+    ->where('token', '[a-f0-9]{32,64}')
+    ->name('pointage.kiosk.location');
 
 Route::get('/', function () {
     return redirect()->route('login');

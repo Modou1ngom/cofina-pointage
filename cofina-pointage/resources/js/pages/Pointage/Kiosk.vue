@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDeviceGeolocation } from '@/composables/useDeviceGeolocation';
 import { Head } from '@inertiajs/vue3';
 import QRCode from 'qrcode';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -9,6 +10,7 @@ interface AgenceInfo {
     code_agent?: string | null;
     pointage_qr_type: string;
     rayon_geofencing_metres: number;
+    has_site_gps?: boolean;
 }
 
 interface QrPayload {
@@ -22,6 +24,8 @@ const props = defineProps<{
     agence: AgenceInfo | null;
     qr: QrPayload | null;
     refresh_url: string | null;
+    location_url?: string | null;
+    auto_site_gps?: boolean;
     kiosk_unavailable?: boolean;
     unavailable_message?: string | null;
     qr_inactif_jour?: boolean;
@@ -38,6 +42,8 @@ const BRAND = {
     side: '#C5C5C5',
 };
 
+const { capture: captureDeviceGps } = useDeviceGeolocation();
+
 const qrDataUrl = ref<string | null>(null);
 const currentQr = ref<QrPayload | null>(props.qr);
 const error = ref<string | null>(null);
@@ -47,12 +53,70 @@ const wakeLockActive = ref(false);
 const adminOpen = ref(false);
 const rootEl = ref<HTMLElement | null>(null);
 const nowTs = ref(Date.now());
+const siteGpsSynced = ref(Boolean(props.agence?.has_site_gps));
+const siteGpsStatus = ref<string | null>(null);
+const syncingSiteGps = ref(false);
 
 let clockTimer: ReturnType<typeof setInterval> | null = null;
 let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+let siteGpsTimer: ReturnType<typeof setInterval> | null = null;
 let wakeLock: WakeLockSentinel | null = null;
 let logoTapCount = 0;
 let logoTapTimer: ReturnType<typeof setTimeout> | null = null;
+
+function xsrfToken(): string {
+    const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : '';
+}
+
+async function syncSiteGpsFromTablet(force = false) {
+    if (!props.auto_site_gps || !props.location_url || syncingSiteGps.value) {
+        return;
+    }
+    if (siteGpsSynced.value && !force) {
+        return;
+    }
+
+    syncingSiteGps.value = true;
+    siteGpsStatus.value = 'Lecture GPS tablette…';
+    try {
+        const coords = await captureDeviceGps();
+        if (!coords) {
+            siteGpsStatus.value =
+                'Activez la localisation sur cette tablette pour enregistrer la position du site.';
+            return;
+        }
+
+        const res = await fetch(props.location_url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-XSRF-TOKEN': xsrfToken(),
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+                accuracy_metres: coords.accuracy_metres,
+            }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) {
+            siteGpsStatus.value =
+                (data as { message?: string }).message ??
+                'Impossible d’enregistrer la position GPS du site.';
+            return;
+        }
+        siteGpsSynced.value = true;
+        siteGpsStatus.value = 'Position du site synchronisée depuis cette tablette.';
+    } catch {
+        siteGpsStatus.value = 'Connexion perdue — GPS site non synchronisé.';
+    } finally {
+        syncingSiteGps.value = false;
+    }
+}
 
 const referenceCode = computed(() => {
     const code = (props.agence?.code_agent || props.agence?.nom || 'COFINA').toString().toUpperCase();
@@ -168,6 +232,7 @@ function onVisibility() {
     if (document.visibilityState === 'visible') {
         void requestWakeLock();
         void refreshQr();
+        void syncSiteGpsFromTablet(!siteGpsSynced.value);
     }
 }
 
@@ -211,11 +276,18 @@ onMounted(() => {
     document.addEventListener('contextmenu', onContextMenu);
     scheduleNextRefresh();
     void requestWakeLock();
+    void syncSiteGpsFromTablet(true);
+    if (props.auto_site_gps && props.location_url) {
+        siteGpsTimer = setInterval(() => {
+            void syncSiteGpsFromTablet(true);
+        }, 15 * 60 * 1000);
+    }
 });
 
 onUnmounted(() => {
     if (clockTimer) clearInterval(clockTimer);
     if (refreshTimer) clearTimeout(refreshTimer);
+    if (siteGpsTimer) clearInterval(siteGpsTimer);
     if (logoTapTimer) clearTimeout(logoTapTimer);
     document.removeEventListener('visibilitychange', onVisibility);
     document.removeEventListener('fullscreenchange', syncFullscreenState);
@@ -332,6 +404,14 @@ onUnmounted(() => {
                         {{ error }}
                     </p>
 
+                    <p
+                        v-if="auto_site_gps && siteGpsStatus"
+                        class="mt-3 max-w-sm text-center text-[11px] leading-snug"
+                        :style="{ color: siteGpsSynced ? '#4a7c59' : BRAND.muted }"
+                    >
+                        {{ siteGpsStatus }}
+                    </p>
+
                     <p v-if="currentQr" class="mt-3 text-center font-mono text-[11px] text-[#a0a0a0]">
                         Renouvellement dans {{ secondsLeft }}s
                         <span v-if="wakeLockActive"> · Écran allumé</span>
@@ -408,6 +488,7 @@ onUnmounted(() => {
             </div>
             <ol class="mt-3 list-decimal space-y-1.5 pl-4 text-[12px] leading-relaxed text-[#555]">
                 <li>Ouvrir ce lien dans Chrome (tablette Android).</li>
+                <li>Autoriser la localisation : la borne enregistre le GPS du site pour le géorepérage.</li>
                 <li>Activer le plein écran, puis épingler l’écran Android.</li>
                 <li>Prod : Fully Kiosk Browser (URL de démarrage = ce lien).</li>
             </ol>
