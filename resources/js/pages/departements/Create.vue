@@ -9,11 +9,6 @@ import InputError from '@/components/InputError.vue';
 import FormSection from '@/components/FormSection.vue';
 import { Code } from 'lucide-vue-next';
 
-interface Props {
-}
-
-const props = defineProps<Props>();
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Départements',

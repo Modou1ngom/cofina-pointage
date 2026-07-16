@@ -7,8 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import InputError from '@/components/InputError.vue';
-import FormSection from '@/components/FormSection.vue';
-import { Code, User, Mail, Lock, Shield, UserCircle, Globe, Settings } from 'lucide-vue-next';
+import { User, Mail, Lock, Shield, UserCircle, Globe, Settings } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
 
 interface Role {

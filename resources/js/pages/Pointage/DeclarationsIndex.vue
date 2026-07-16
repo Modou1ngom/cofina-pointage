@@ -259,7 +259,7 @@ function statutBadgeClass(statut: string): string {
                 </DialogHeader>
 
                 <form class="space-y-4 pt-2" @submit.prevent="submitDeclaration">
-                    <DeclarationFormFields :form="form" />
+                    <DeclarationFormFields v-model:form="form" />
 
                     <div class="rounded-lg border border-[#B5D4F4] bg-[#E6F1FB] px-3 py-2 text-xs text-[#0C447C]">
                         {{ validation_hint }}

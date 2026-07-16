@@ -1,24 +1,11 @@
 <script setup lang="ts">
 import { Head, useForm, router } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/InputError.vue';
 import { Upload, FileSpreadsheet, AlertCircle, CheckCircle2 } from 'lucide-vue-next';
 import { ref } from 'vue';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Profils',
-        href: '/profils',
-    },
-    {
-        title: 'Importer des profils',
-        href: '#',
-    },
-];
 
 const form = useForm({
     file: null as File | null,

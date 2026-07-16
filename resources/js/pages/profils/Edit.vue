@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import InputError from '@/components/InputError.vue';
 import FormSection from '@/components/FormSection.vue';
-import { Code } from 'lucide-vue-next';
 import { computed, watch, ref } from 'vue';
 
 interface Profil {

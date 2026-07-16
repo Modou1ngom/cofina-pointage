@@ -5,10 +5,8 @@ import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import DataTable, { type Column } from '@/components/DataTable.vue';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getInitials } from '@/composables/useInitials';
 import { ref, computed } from 'vue';
-import { Code, Eye, Pencil, Trash2, RefreshCw, Lock, Unlock } from 'lucide-vue-next';
+import { Eye, Pencil, Trash2, Lock, Unlock } from 'lucide-vue-next';
 
 interface User {
     id: number;
@@ -103,32 +101,6 @@ const toggleUser = (id: number) => {
     }
 };
 
-const getAvatarColor = (name: string) => {
-    const colors = [
-        'bg-purple-500',
-        'bg-blue-500',
-        'bg-green-500',
-        'bg-yellow-500',
-        'bg-pink-500',
-        'bg-indigo-500',
-        'bg-red-500',
-        'bg-teal-500',
-    ];
-    const index = name.charCodeAt(0) % colors.length;
-    return colors[index];
-};
-
-const getStatusBadge = (isActive: boolean) => {
-    if (isActive) {
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-    }
-    return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
-};
-
-const getStatusLabel = (isActive: boolean) => {
-    return isActive ? 'Actif' : 'Inactif';
-};
-
 const columns: Column[] = [
     {
         key: 'name',
@@ -182,10 +154,6 @@ const tableData = computed(() => {
         user: user,
     }));
 });
-
-const reload = () => {
-    router.reload({ only: ['users'] });
-};
 
 const applyFilters = () => {
     const params = new URLSearchParams();

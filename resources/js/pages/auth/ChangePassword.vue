@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Form, Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle, Lock, AlertCircle, Shield } from 'lucide-vue-next';
+import { LoaderCircle, Lock, Shield } from 'lucide-vue-next';
 
 const form = useForm({
     password: '',

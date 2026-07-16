@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { ChevronUp, ChevronDown, ChevronsLeft, ChevronsRight, ChevronLeft, ChevronRight } from 'lucide-vue-next';
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-vue-next';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -99,30 +98,6 @@ const handleSort = (column: string) => {
     }
     
     props.onSort(column, sortDirection.value);
-};
-
-const getInitials = (name: string) => {
-    if (!name) return '';
-    const parts = name.split(' ');
-    if (parts.length >= 2) {
-        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-};
-
-const getAvatarColor = (name: string) => {
-    const colors = [
-        'bg-purple-500',
-        'bg-blue-500',
-        'bg-green-500',
-        'bg-yellow-500',
-        'bg-pink-500',
-        'bg-indigo-500',
-        'bg-red-500',
-        'bg-teal-500',
-    ];
-    const index = name.charCodeAt(0) % colors.length;
-    return colors[index];
 };
 
 const totalPages = computed(() => {

@@ -7,7 +7,7 @@ import DataTable, { type Column } from '@/components/DataTable.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getInitials } from '@/composables/useInitials';
 import { computed } from 'vue';
-import { Code, Eye, Pencil, Trash2, Filter, Upload, Download, Lock, Unlock } from 'lucide-vue-next';
+import { Eye, Pencil, Trash2, Filter, Upload, Download, Lock, Unlock } from 'lucide-vue-next';
 import { Input } from '@/components/ui/input';
 import { ref } from 'vue';
 

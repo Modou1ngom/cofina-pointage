@@ -5,10 +5,8 @@ import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import InputError from '@/components/InputError.vue';
-import FormSection from '@/components/FormSection.vue';
-import { User, Mail, Phone, Globe, Building2, Briefcase, FileText, Users, ArrowLeft, ArrowRight } from 'lucide-vue-next';
+import { User, Mail, Phone, Globe, Building2, Briefcase, FileText, Users } from 'lucide-vue-next';
 import { computed, watch, ref } from 'vue';
 
 interface Profil {

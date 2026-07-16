@@ -33,7 +33,7 @@ function submit() {
         <div class="mx-auto max-w-lg space-y-6">
             <h1 class="text-xl font-semibold text-[#0C447C]">Nouvelle déclaration</h1>
             <form class="space-y-4 rounded-[10px] border border-[#e2e0d8] bg-white p-6 shadow-sm" @submit.prevent="submit">
-                <DeclarationFormFields :form="form" />
+                <DeclarationFormFields v-model:form="form" />
 
                 <div class="rounded-lg border border-[#B5D4F4] bg-[#E6F1FB] px-3 py-2 text-xs text-[#0C447C]">
                     {{ validation_hint }}

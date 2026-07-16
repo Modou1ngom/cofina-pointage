@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import PointageLayout from '@/layouts/pointage/PointageLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import QRCode from 'qrcode';
 import { QrCode as QrCodeIcon } from 'lucide-vue-next';
 import { computed, reactive, ref, watch } from 'vue';
@@ -60,9 +60,6 @@ interface QrPreview {
 function qrEncodeContent(p: QrPreview): string {
     return p.qr_content ?? p.scan_url ?? p.token;
 }
-
-const page = usePage();
-const isAdmin = computed(() => !!(page.props.auth as { isAdmin?: boolean })?.isAdmin);
 
 const props = defineProps<{
     agences: {
@@ -503,12 +500,6 @@ async function toggleQrPause(a: Agence) {
 function regenAll() {
     if (!confirm('Régénérer tous les secrets QR ? Cette action affecte tous les sites.')) return;
     router.post('/pointage/sites/regenerer-tous-qr', {}, { preserveScroll: true });
-}
-
-function toggleActif(id: number, actif: boolean) {
-    const msg = actif ? 'Mettre ce site en pause ? Le pointage y sera désactivé.' : 'Réactiver ce site ?';
-    if (!confirm(msg)) return;
-    router.post(`/pointage/sites/${id}/toggle-actif`, {}, { preserveScroll: true });
 }
 
 function scrollToQr(id: number) {
