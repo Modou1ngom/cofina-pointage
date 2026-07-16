@@ -120,14 +120,14 @@ function statutBadgeClass(statut: string): string {
                             : 'bg-[#FAFAF8] text-[#888780] hover:bg-[#F1EFE8]'
                     "
                 >
-                    Tout l'historique
+                    Toute l'historique
                 </Link>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <div class="rounded-[10px] border border-[#e2e0d8] bg-white p-4 shadow-sm">
                     <div class="text-[10px] font-bold uppercase tracking-wide text-[#888780]">
-                        Total heures ({{ summary.card_periode_titre }})
+                        Totales heures ({{ summary.card_periode_titre }})
                     </div>
                     <div class="mt-2 text-2xl font-bold tabular-nums text-[#0C447C]">{{ summary.total_heures_label }}</div>
                     <p class="mt-1 text-xs text-[#888780]">{{ summary.total_heures_sous_titre }}</p>
