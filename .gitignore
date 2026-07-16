@@ -1,6 +1,8 @@
 /.phpunit.cache
 /bootstrap/ssr
 /node_modules
+# Copie imbriquée accidentelle du projet (ne pas re-commit)
+/cofina-pointage/
 
 /public/hot
 /public/storage
