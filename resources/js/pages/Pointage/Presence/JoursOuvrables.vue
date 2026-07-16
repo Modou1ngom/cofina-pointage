@@ -108,8 +108,7 @@ function submit() {
             <div>
                 <h1 class="text-xl font-semibold text-[#0C447C]">Définition des jours ouvrables</h1>
                 <p class="mt-1 text-sm text-[#5c5a57]">
-                    Cochez les jours ouvrables, définissez plage et durée théorique. Les profils peuvent cibler le global,
-                    un département ou un employé (voir libellé du profil).
+          
                 </p>
             </div>
 
